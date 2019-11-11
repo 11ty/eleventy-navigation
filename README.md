@@ -2,6 +2,8 @@
 
 A plugin for creating hierarchical navigation in Eleventy projects. Supports breadcrumbs too!
 
+Used [in production on 11ty.io](https://www.11ty.io/docs/)!
+
 ## Installation
 
 Available on [npm](https://www.npmjs.com/package/@11ty/eleventy-navigation).
