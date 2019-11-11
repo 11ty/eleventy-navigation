@@ -1,12 +1,12 @@
 {
   "name": "@11ty/eleventy-navigation",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A plugin for creating hierarchical navigation in Eleventy projects. Supports breadcrumbs too!",
   "main": ".eleventy.js",
   "scripts": {
     "test": "npx ava"
   },
-   "repository": {
+  "repository": {
     "type": "git",
     "url": "git+https://github.com/11ty/eleventy-navigation.git"
   },
@@ -25,10 +25,10 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@11ty/eleventy": "^0.9.0",
     "ava": "^2.4.0"
   },
   "dependencies": {
+    "@11ty/eleventy": ">=0.7.0",
     "dependency-graph": "^0.8.0"
   },
   "ava": {
