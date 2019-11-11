@@ -108,11 +108,9 @@ eleventyNavigation:
 ---
 ```
 
-## Rendering the Navigation Bar
+## Rendering the Navigation Bar (Nunjucks)
 
-Current template language support:
-
-* Nunjucks
+Currently only Nunjucks support is available for this plugin. More to come!
 
 ### Full Navigation Tree
 
