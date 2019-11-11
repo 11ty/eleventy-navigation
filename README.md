@@ -7,7 +7,7 @@ A plugin for creating hierarchical navigation in Eleventy projects. Supports bre
 Available on [npm](https://www.npmjs.com/package/@11ty/eleventy-navigation).
 
 ```
-npm install @11ty/eleventy-navigation --save
+npm install @11ty/eleventy-navigation --save-dev
 ```
 
 Open up your Eleventy config file (probably `.eleventy.js`) and use `addPlugin`:
@@ -19,6 +19,7 @@ module.exports = function(eleventyConfig) {
 };
 ```
 
+Read more about [Eleventy plugins.](https://www.11ty.io/docs/plugins/)
 
 ## Adding Templates to the Navigation
 
