@@ -1,6 +1,6 @@
 # eleventy-navigation
 
-A plugin for creating hierarchical navigation in Eleventy plugins. Supports breadcrumbs too!
+A plugin for creating hierarchical navigation in Eleventy projects. Supports breadcrumbs too!
 
 ## Installation
 

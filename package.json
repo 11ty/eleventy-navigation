@@ -1,7 +1,7 @@
 {
   "name": "@11ty/eleventy-navigation",
   "version": "0.1.0",
-  "description": "A plugin for creating hierarchical navigation in Eleventy plugins. Supports breadcrumbs too!",
+  "description": "A plugin for creating hierarchical navigation in Eleventy projects. Supports breadcrumbs too!",
   "main": ".eleventy.js",
   "scripts": {
     "test": "npx ava"
