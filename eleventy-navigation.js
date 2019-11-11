@@ -1,4 +1,5 @@
 const DepGraph = require("dependency-graph").DepGraph;
+const urlFilter = require("@11ty/eleventy/src/Filters/Url");
 
 function findNavigationEntries(nodes = [], key = "") {
 	let pages = [];
@@ -67,7 +68,7 @@ function navigationToHtml(pages, options = {}) {
 	options.isChildList = true;
 
 	if(pages.length && pages[0].pluginType !== "eleventy-navigation") {
-		throw new Error("Incorrect argument passed to eleventyNavigationToHtml filter. You must call `eleventyNavigation` or `eleventyNavigationBreadcrumb` first, like: `collection.all | eleventyNavigation | eleventyNavigationToHtml(page.url) | safe`");
+		throw new Error("Incorrect argument passed to eleventyNavigationToHtml filter. You must call `eleventyNavigation` or `eleventyNavigationBreadcrumb` first, like: `collection.all | eleventyNavigation | eleventyNavigationToHtml | safe`");
 	}
 
 	return pages.length ? `<${options.listElement}${!isChildList && options.listClass ? ` class="${options.listClass}"` : ''}>${pages.map(entry => {
@@ -79,7 +80,7 @@ function navigationToHtml(pages, options = {}) {
 			liClass.push(options.activeListItemClass);
 		}
 
-		return `<${options.listItemElement}${liClass.length ? ` class="${liClass.join(" ")}"` : ''}><a href="${entry.url}">${entry.title}</a>${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml(entry.children, options) : ""}</${options.listItemElement}>`;
+		return `<${options.listItemElement}${liClass.length ? ` class="${liClass.join(" ")}"` : ''}><a href="${urlFilter(entry.url)}">${entry.title}</a>${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml(entry.children, options) : ""}</${options.listItemElement}>`;
 	}).join("\n")}</${options.listElement}>` : "";
 }
 
