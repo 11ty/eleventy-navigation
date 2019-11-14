@@ -59,6 +59,8 @@ function navigationToHtml(pages, options = {}) {
 		listClass: "",
 		listItemClass: "",
 		listItemHasChildrenClass: "",
+		anchorClass: "",
+		activeAnchorClass: "",
 		activeKey: "",
 		activeListItemClass: "",
 		showExcerpt: false,
@@ -74,17 +76,19 @@ function navigationToHtml(pages, options = {}) {
 
 	return pages.length ? `<${options.listElement}${!isChildList && options.listClass ? ` class="${options.listClass}"` : ''}>${pages.map(entry => {
 		let liClass = [];
+		let aClass = [ options.anchorClass ];
 		if(options.listItemClass) {
 			liClass.push(options.listItemClass);
 		}
 		if(options.activeKey === entry.key && options.activeListItemClass) {
-			liClass.push(options.activeListItemClass);
+      liClass.push(options.activeListItemClass);
+      aClass.push(options.activeAnchorClass);
 		}
 		if(options.listItemHasChildrenClass && entry.children && entry.children.length) {
 			liClass.push(options.listItemHasChildrenClass);
 		}
 
-		return `<${options.listItemElement}${liClass.length ? ` class="${liClass.join(" ")}"` : ''}><a href="${urlFilter(entry.url)}">${entry.title}</a>${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml(entry.children, options) : ""}</${options.listItemElement}>`;
+		return `<${options.listItemElement}${liClass.length ? ` class="${liClass.join(" ")}"` : ''}><a ${aClass.length ? ` class="${aClass.join(" ")}"` : ''}href="${urlFilter(entry.url)}">${entry.title}</a>${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml(entry.children, options) : ""}</${options.listItemElement}>`;
 	}).join("\n")}</${options.listElement}>` : "";
 }
 
