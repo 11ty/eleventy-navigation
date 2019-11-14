@@ -58,6 +58,7 @@ function navigationToHtml(pages, options = {}) {
 		listItemElement: "li",
 		listClass: "",
 		listItemClass: "",
+		listItemHasChildrenClass: "",
 		activeKey: "",
 		activeListItemClass: "",
 		showExcerpt: false,
@@ -78,6 +79,9 @@ function navigationToHtml(pages, options = {}) {
 		}
 		if(options.activeKey === entry.key && options.activeListItemClass) {
 			liClass.push(options.activeListItemClass);
+		}
+		if(options.listItemHasChildrenClass && entry.children && entry.children.length) {
+			liClass.push(options.listItemHasChildrenClass);
 		}
 
 		return `<${options.listItemElement}${liClass.length ? ` class="${liClass.join(" ")}"` : ''}><a href="${urlFilter(entry.url)}">${entry.title}</a>${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml(entry.children, options) : ""}</${options.listItemElement}>`;

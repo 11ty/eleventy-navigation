@@ -262,3 +262,35 @@ test("Checking active class on output HTML", t => {
 	});
 	t.true(activeHtml.indexOf(`<li class="this-is-the-active-item"><a href="child1.html">child1</a></li>`) > -1);
 });
+
+test("Checking has children class on output HTML", t => {
+	let obj = EleventyNavigation.findNavigationEntries([
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root1"
+				},
+				page: {
+					url: "root1.html"
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "root1",
+					key: "child1"
+				},
+				page: {
+					url: "child1.html"
+				}
+			}
+		}
+	]);
+
+	let activeHtml = EleventyNavigation.toHtml(obj, {
+		listItemHasChildrenClass: "item-has-children"
+	});
+	t.true(activeHtml.indexOf(`<li class="item-has-children"><a href="root1.html">root1</a>`) > -1);
+	t.true(activeHtml.indexOf(`<li><a href="child1.html">child1</a></li>`) > -1);
+});

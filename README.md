@@ -161,12 +161,13 @@ You can change the HTML elements, classes on the list and list items, and add an
 
 ```
 {{ collections.all | eleventyNavigation | eleventyNavigationToHtml({
-    listElement: "ul",        // Change the top level tag
-    listItemElement: "li",    // Change the item tag
+    listElement: "ul",            // Change the top level tag
+    listItemElement: "li",        // Change the item tag
 
-    listClass: "",            // Add a class to the top level
-    listItemClass: "",        // Add a class to every item
-    activeListItemClass: "",  // Add a class to the current page’s item
+    listClass: "",                // Add a class to the top level
+    listItemClass: "",            // Add a class to every item
+    listItemHasChildrenClass: "", // Add a class if the item has children
+    activeListItemClass: "",      // Add a class to the current page’s item
 
     // If matched, `activeListItemClass` will be added to the item
     activeKey: "",
