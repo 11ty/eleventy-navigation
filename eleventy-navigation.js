@@ -81,8 +81,8 @@ function navigationToHtml(pages, options = {}) {
 			liClass.push(options.listItemClass);
 		}
 		if(options.activeKey === entry.key && options.activeListItemClass) {
-      liClass.push(options.activeListItemClass);
-      aClass.push(options.activeAnchorClass);
+			liClass.push(options.activeListItemClass);
+			aClass.push(options.activeAnchorClass);
 		}
 		if(options.listItemHasChildrenClass && entry.children && entry.children.length) {
 			liClass.push(options.listItemHasChildrenClass);
