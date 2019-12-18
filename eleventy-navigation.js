@@ -1,5 +1,4 @@
 const DepGraph = require("dependency-graph").DepGraph;
-const urlFilter = require("@11ty/eleventy/src/Filters/Url");
 
 function findNavigationEntries(nodes = [], key = "") {
 	let pages = [];
@@ -32,7 +31,7 @@ function findDependencies(pages, depGraph, parentKey) {
 	for( let page of pages ) {
 		depGraph.addNode(page.key, page);
 		if(parentKey) {
-			depGraph.addDependency(page.key, parentKey)
+			depGraph.addDependency(page.key, parentKey);
 		}
 		if(page.children) {
 			findDependencies(page.children, depGraph, page.key);
@@ -48,6 +47,7 @@ function findBreadcrumbEntries(nodes, activeKey) {
 	return activeKey ? graph.dependenciesOf(activeKey).map(key => {
 		let data = Object.assign({}, graph.getNodeData(key));
 		delete data.children;
+		data._isBreadcrumb = true;
 		return data;
 	}) : [];
 }
@@ -68,6 +68,19 @@ function navigationToHtml(pages, options = {}) {
 	let isChildList = !!options.isChildList;
 	options.isChildList = true;
 
+	let urlFilter;
+	if("getFilter" in this) {
+		// v0.10.0.beta.2 and above
+		urlFilter = this.getFilter("url");
+	} else if("nunjucksFilters" in this) {
+		// backwards compat, hardcoded key
+		urlFilter = this.nunjucksFilters.url;
+	} else {
+		// Theoretically we could just move on here with a `url => url` but then `pathPrefix`
+		// would not work and it wouldn’t be obvious why—so let’s fail loudly to avoid that.
+		throw new Error("Could not find a `url` filter for the eleventy-navigation plugin in eleventyNavigationToHtml filter.");
+	}
+
 	if(pages.length && pages[0].pluginType !== "eleventy-navigation") {
 		throw new Error("Incorrect argument passed to eleventyNavigationToHtml filter. You must call `eleventyNavigation` or `eleventyNavigationBreadcrumb` first, like: `collection.all | eleventyNavigation | eleventyNavigationToHtml | safe`");
 	}
@@ -84,7 +97,7 @@ function navigationToHtml(pages, options = {}) {
 			liClass.push(options.listItemHasChildrenClass);
 		}
 
-		return `<${options.listItemElement}${liClass.length ? ` class="${liClass.join(" ")}"` : ''}><a href="${urlFilter(entry.url)}">${entry.title}</a>${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml(entry.children, options) : ""}</${options.listItemElement}>`;
+		return `<${options.listItemElement}${liClass.length ? ` class="${liClass.join(" ")}"` : ''}><a href="${urlFilter(entry.url)}">${entry.title}</a>${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml.call(this, entry.children, options) : ""}</${options.listItemElement}>`;
 	}).join("\n")}</${options.listElement}>` : "";
 }
 

@@ -1,6 +1,9 @@
 {
   "name": "@11ty/eleventy-navigation",
   "version": "0.1.2",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "A plugin for creating hierarchical navigation in Eleventy projects. Supports breadcrumbs too!",
   "main": ".eleventy.js",
   "scripts": {
@@ -24,12 +27,14 @@
     "url": "https://zachleat.com/"
   },
   "license": "MIT",
+  "peerDependencies": {
+    "@11ty/eleventy": ">=0.7.0"
+  },
   "devDependencies": {
     "ava": "^2.4.0"
   },
   "dependencies": {
-    "@11ty/eleventy": ">=0.7.0",
-    "dependency-graph": "^0.8.0"
+    "dependency-graph": "^0.8.1"
   },
   "ava": {
     "files": [
