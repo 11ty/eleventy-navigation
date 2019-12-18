@@ -61,6 +61,8 @@ function navigationToHtml(pages, options = {}) {
 		listItemHasChildrenClass: "",
 		activeKey: "",
 		activeListItemClass: "",
+		anchorClass: "",
+		activeAnchorClass: "",
 		showExcerpt: false,
 		isChildList: false
 	}, options);
@@ -87,17 +89,26 @@ function navigationToHtml(pages, options = {}) {
 
 	return pages.length ? `<${options.listElement}${!isChildList && options.listClass ? ` class="${options.listClass}"` : ''}>${pages.map(entry => {
 		let liClass = [];
+		let aClass = [];
 		if(options.listItemClass) {
 			liClass.push(options.listItemClass);
 		}
-		if(options.activeKey === entry.key && options.activeListItemClass) {
-			liClass.push(options.activeListItemClass);
+		if(options.anchorClass) {
+			aClass.push(options.anchorClass);
+		}
+		if(options.activeKey === entry.key) {
+			if(options.activeListItemClass) {
+				liClass.push(options.activeListItemClass);
+			}
+			if(options.activeAnchorClass) {
+				aClass.push(options.activeAnchorClass);
+			}
 		}
 		if(options.listItemHasChildrenClass && entry.children && entry.children.length) {
 			liClass.push(options.listItemHasChildrenClass);
 		}
 
-		return `<${options.listItemElement}${liClass.length ? ` class="${liClass.join(" ")}"` : ''}><a href="${urlFilter(entry.url)}">${entry.title}</a>${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml.call(this, entry.children, options) : ""}</${options.listItemElement}>`;
+		return `<${options.listItemElement}${liClass.length ? ` class="${liClass.join(" ")}"` : ''}><a href="${urlFilter(entry.url)}"${aClass.length ? ` class="${aClass.join(" ")}"` : ''}>${entry.title}</a>${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml.call(this, entry.children, options) : ""}</${options.listItemElement}>`;
 	}).join("\n")}</${options.listElement}>` : "";
 }
 
