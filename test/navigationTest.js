@@ -287,18 +287,18 @@ test("Checking active class on output HTML", t => {
 	});
 	t.true(activeHtmlItem.indexOf(`<li class="this-is-the-active-item"><a href="child1.html">child1</a></li>`) > -1);
   
-	let activeHtmlAnchor = EleventyNavigation.toHtml(obj, {
+	let activeHtmlAnchor = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		activeKey: "child1",
 		activeAnchorClass: "this-is-the-active-anchor"
 	});
-	t.true(activeHtmlAnchor.indexOf(`<li><a class="this-is-the-active-anchor" href="child1.html">child1</a></li>`) > -1);
+	t.true(activeHtmlAnchor.indexOf(`<li><a href="child1.html" class="this-is-the-active-anchor">child1</a></li>`) > -1);
 
-	let activeHtmlItemAndAnchor = EleventyNavigation.toHtml(obj, {
+	let activeHtmlItemAndAnchor = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		activeKey: "child1",
 		activeListItemClass: "this-is-the-active-item",
 		activeAnchorClass: "this-is-the-active-anchor"
 	});
-	t.true(activeHtmlItemAndAnchor.indexOf(`<li class="this-is-the-active-item"><a class="this-is-the-active-anchor" href="child1.html">child1</a></li>`) > -1);
+	t.true(activeHtmlItemAndAnchor.indexOf(`<li class="this-is-the-active-item"><a href="child1.html" class="this-is-the-active-anchor">child1</a></li>`) > -1);
 });
 
 test("Checking has children class on output HTML", t => {
