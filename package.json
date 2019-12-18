@@ -17,6 +17,10 @@
     "url": "https://github.com/11ty/eleventy-navigation/issues"
   },
   "homepage": "https://github.com/11ty/eleventy-navigation#readme",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/11ty"
+  },
   "keywords": [
     "eleventy",
     "eleventy-plugin"
