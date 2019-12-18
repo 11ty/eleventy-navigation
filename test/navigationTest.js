@@ -228,6 +228,31 @@ test("One root, three child navigation (implied order)", t => {
 	t.is(obj[0].children[2].key, "child1");
 });
 
+test("Show throw an error without a config", t => {
+	let obj = EleventyNavigation.findNavigationEntries([
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root1"
+				},
+				page: {
+					url: "root1.html"
+				}
+			}
+		}
+	]);
+
+	t.throws(() => {
+		EleventyNavigation.toHtml(obj);
+	});
+});
+
+let fakeConfig = {
+	nunjucksFilters: {
+		url: url => url
+	}
+};
+
 test("Checking active class on output HTML", t => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
@@ -253,10 +278,10 @@ test("Checking active class on output HTML", t => {
 		}
 	]);
 
-	let html = EleventyNavigation.toHtml(obj);
+	let html = EleventyNavigation.toHtml.call(fakeConfig, obj);
 	t.true(html.indexOf(`<li><a href="child1.html">child1</a></li>`) > -1);
 
-	let activeHtml = EleventyNavigation.toHtml(obj, {
+	let activeHtml = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		activeKey: "child1",
 		activeListItemClass: "this-is-the-active-item"
 	});
@@ -288,7 +313,7 @@ test("Checking has children class on output HTML", t => {
 		}
 	]);
 
-	let activeHtml = EleventyNavigation.toHtml(obj, {
+	let activeHtml = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		listItemHasChildrenClass: "item-has-children"
 	});
 	t.true(activeHtml.indexOf(`<li class="item-has-children"><a href="root1.html">root1</a>`) > -1);
