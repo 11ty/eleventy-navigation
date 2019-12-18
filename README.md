@@ -169,7 +169,10 @@ You can change the HTML elements, classes on the list and list items, and add an
     listItemHasChildrenClass: "", // Add a class if the item has children
     activeListItemClass: "",      // Add a class to the current page’s item
 
-    // If matched, `activeListItemClass` will be added to the item
+    anchorClass: "",              // Add a class to the anchor
+    activeAnchorClass: "",        // Add a class to the current page’s anchor
+
+    // If matched, `activeListItemClass` and `activeAnchorClass` will be added
     activeKey: "",
     // It’s likely you want to pass in `eleventyNavigation.key` here, e.g.:
     // activeKey: eleventyNavigation.key
