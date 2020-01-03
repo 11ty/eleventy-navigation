@@ -20,7 +20,12 @@ test("One root page navigation", t => {
 	]);
 	t.is(obj[0].key, "root1");
 	t.is(obj[0].pluginType, "eleventy-navigation");
+
+	// Warning, title must be preserved per the public API
 	t.is(obj[0].title, "root1");
+	// Warning, url must be preserved per the public API
+	t.is(obj[0].url, "root1.html");
+
 	t.is(obj[0].children.length, 0);
 });
 
