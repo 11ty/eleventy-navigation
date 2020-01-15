@@ -7,7 +7,7 @@ function findNavigationEntries(nodes = [], key = "") {
 			let nav = entry.data.eleventyNavigation;
 			if(!key && !nav.parent || nav.parent === key) {
 				pages.push(Object.assign({}, nav, {
-					url: entry.data.page.url,
+					url: nav.url || entry.data.page.url,
 					pluginType: "eleventy-navigation"
 				}, key ? { parentKey: key } : {}));
 			}
@@ -72,7 +72,7 @@ function navigationToHtml(pages, options = {}) {
 
 	let urlFilter;
 	if("getFilter" in this) {
-		// v0.10.0.beta.2 and above
+		// v0.10.0 and above
 		urlFilter = this.getFilter("url");
 	} else if("nunjucksFilters" in this) {
 		// backwards compat, hardcoded key

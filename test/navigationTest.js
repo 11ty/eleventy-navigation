@@ -337,3 +337,21 @@ test("Checking has children class on output HTML", t => {
 	t.true(activeHtml.indexOf(`<li class="item-has-children"><a href="root1.html">root1</a>`) > -1);
 	t.true(activeHtml.indexOf(`<li><a href="child1.html">child1</a></li>`) > -1);
 });
+
+test("URL override", t => {
+	let obj = EleventyNavigation.findNavigationEntries([
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root1",
+					url: "https://www.zachleat.com/"
+				},
+				page: {
+					url: "root1.html"
+				}
+			}
+		}
+	]);
+
+	t.is(obj[0].url, "https://www.zachleat.com/");
+});
