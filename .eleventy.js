@@ -2,9 +2,9 @@ const EleventyNavigation = require("./eleventy-navigation");
 
 // export the configuration function for plugin
 module.exports = function(eleventyConfig) {
-	eleventyConfig.addNunjucksFilter("eleventyNavigation", EleventyNavigation.findNavigationEntries);
-	eleventyConfig.addNunjucksFilter("eleventyNavigationBreadcrumb", EleventyNavigation.findBreadcrumbEntries);
-	eleventyConfig.addNunjucksFilter("eleventyNavigationToHtml", function(pages, options) {
+	eleventyConfig.addFilter("eleventyNavigation", EleventyNavigation.findNavigationEntries);
+	eleventyConfig.addFilter("eleventyNavigationBreadcrumb", EleventyNavigation.findBreadcrumbEntries);
+	eleventyConfig.addFilter("eleventyNavigationToHtml", function(pages, options) {
 		return EleventyNavigation.toHtml.call(eleventyConfig, pages, options);
 	});
 };
