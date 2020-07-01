@@ -39,10 +39,15 @@ function findDependencies(pages, depGraph, parentKey) {
 	}
 }
 
-function findBreadcrumbEntries(nodes, activeKey) {
+function getDependencyGraph(nodes) {
 	let pages = findNavigationEntries(nodes);
 	let graph = new DepGraph();
 	findDependencies(pages, graph);
+	return graph;
+}
+
+function findBreadcrumbEntries(nodes, activeKey) {
+	let graph = getDependencyGraph(nodes);
 
 	return activeKey ? graph.dependenciesOf(activeKey).map(key => {
 		let data = Object.assign({}, graph.getNodeData(key));
@@ -113,6 +118,7 @@ function navigationToHtml(pages, options = {}) {
 }
 
 module.exports = {
+	getDependencyGraph,
 	findNavigationEntries,
 	findBreadcrumbEntries,
 	toHtml: navigationToHtml

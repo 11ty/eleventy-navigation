@@ -12,4 +12,5 @@ module.exports = function(eleventyConfig) {
 module.exports.navigation = {
 	find: EleventyNavigation.findNavigationEntries,
 	findBreadcrumbs: EleventyNavigation.findBreadcrumbEntries,
+	getDependencyGraph: EleventyNavigation.getDependencyGraph,
 };
