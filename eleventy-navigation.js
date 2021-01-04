@@ -46,16 +46,28 @@ function getDependencyGraph(nodes) {
 	return graph;
 }
 
-function findBreadcrumbEntries(nodes, activeKey) {
+function findBreadcrumbEntries(nodes, activeKey, includeActiveKey = false) {
 	let graph = getDependencyGraph(nodes);
+	let parentChildren = [];
 
-	return activeKey ? graph.dependenciesOf(activeKey).map(key => {
+	const parents = graph.dependenciesOf(activeKey).map(key => {
 		let data = Object.assign({}, graph.getNodeData(key));
+		parentChildren = data.children;
 		delete data.children;
 		data._isBreadcrumb = true;
 		return data;
-	}) : [];
+	});
+
+	if (includeActiveKey) {
+		let activeKeyData = parentChildren.filter(obj => obj.key == activeKey)[0];
+		delete activeKeyData.children;
+		activeKeyData._isBreadcrumb = true;
+		parents.push(activeKeyData);
+	}
+
+	return activeKey ? parents : [];
 }
+
 
 function navigationToHtml(pages, options = {}) {
 	options = Object.assign({
