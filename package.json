@@ -1,6 +1,6 @@
 {
   "name": "@11ty/eleventy-navigation",
-  "version": "0.1.6",
+  "version": "0.2.0",
   "publishConfig": {
     "access": "public"
   },
