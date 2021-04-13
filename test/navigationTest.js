@@ -1,5 +1,5 @@
-import test from "ava";
-import EleventyNavigation from "../eleventy-navigation";
+const test = require("ava");
+const EleventyNavigation = require("../eleventy-navigation");
 
 test("Empty navigation", t => {
 	t.deepEqual(EleventyNavigation.findNavigationEntries(), []);
@@ -354,4 +354,89 @@ test("URL override", t => {
 	]);
 
 	t.is(obj[0].url, "https://www.zachleat.com/");
+});
+
+test("Breadcrumbs", t => {
+	let obj = EleventyNavigation.findBreadcrumbEntries([
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root1"
+				},
+				page: {
+					url: "root1.html"
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "root1",
+					key: "child1"
+				},
+				page: {
+					url: "child1.html"
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "child1",
+					key: "grandchild1"
+				},
+				page: {
+					url: "grandchild1.html"
+				}
+			}
+		}
+	], "grandchild1");
+
+	t.is(obj.length, 2);
+	t.is(obj[0].key, "root1");
+	t.is(obj[1].key, "child1");
+});
+
+test("Breadcrumbs (include self)", t => {
+	let obj = EleventyNavigation.findBreadcrumbEntries([
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root1"
+				},
+				page: {
+					url: "root1.html"
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "root1",
+					key: "child1"
+				},
+				page: {
+					url: "child1.html"
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "child1",
+					key: "grandchild1"
+				},
+				page: {
+					url: "grandchild1.html"
+				}
+			}
+		}
+	], "grandchild1", {
+		includeSelf: true
+	});
+
+	t.is(obj.length, 3);
+	t.is(obj[0].key, "root1");
+	t.is(obj[1].key, "child1");
+	t.is(obj[2].key, "grandchild1");
 });

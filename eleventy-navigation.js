@@ -46,10 +46,14 @@ function getDependencyGraph(nodes) {
 	return graph;
 }
 
-function findBreadcrumbEntries(nodes, activeKey) {
+function findBreadcrumbEntries(nodes, activeKey, options = {}) {
 	let graph = getDependencyGraph(nodes);
+	let deps = graph.dependenciesOf(activeKey);
+	if(options.includeSelf) {
+		deps.push(activeKey);
+	}
 
-	return activeKey ? graph.dependenciesOf(activeKey).map(key => {
+	return activeKey ? deps.map(key => {
 		let data = Object.assign({}, graph.getNodeData(key));
 		delete data.children;
 		data._isBreadcrumb = true;
