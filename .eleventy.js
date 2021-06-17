@@ -7,6 +7,9 @@ module.exports = function(eleventyConfig) {
 	eleventyConfig.addFilter("eleventyNavigationToHtml", function(pages, options) {
 		return EleventyNavigation.toHtml.call(eleventyConfig, pages, options);
 	});
+	eleventyConfig.addFilter("eleventyNavigationToMarkdown", function(pages, options) {
+		return EleventyNavigation.toHtml.call(eleventyConfig, pages, options);
+	});
 };
 
 module.exports.navigation = {
