@@ -61,6 +61,20 @@ function findBreadcrumbEntries(nodes, activeKey, options = {}) {
 	}) : [];
 }
 
+function getUrlFilter() {
+	if("getFilter" in this) {
+		// v0.10.0 and above
+		return this.getFilter("url");
+	} else if("nunjucksFilters" in this) {
+		// backwards compat, hardcoded key
+		return this.nunjucksFilters.url;
+	} else {
+		// Theoretically we could just move on here with a `url => url` but then `pathPrefix`
+		// would not work and it wouldn’t be obvious why—so let’s fail loudly to avoid that.
+		throw new Error("Could not find a `url` filter for the eleventy-navigation plugin in eleventyNavigationToHtml filter.");
+	}
+}
+
 function navigationToHtml(pages, options = {}) {
 	options = Object.assign({
 		listElement: "ul",
@@ -79,18 +93,7 @@ function navigationToHtml(pages, options = {}) {
 	let isChildList = !!options.isChildList;
 	options.isChildList = true;
 
-	let urlFilter;
-	if("getFilter" in this) {
-		// v0.10.0 and above
-		urlFilter = this.getFilter("url");
-	} else if("nunjucksFilters" in this) {
-		// backwards compat, hardcoded key
-		urlFilter = this.nunjucksFilters.url;
-	} else {
-		// Theoretically we could just move on here with a `url => url` but then `pathPrefix`
-		// would not work and it wouldn’t be obvious why—so let’s fail loudly to avoid that.
-		throw new Error("Could not find a `url` filter for the eleventy-navigation plugin in eleventyNavigationToHtml filter.");
-	}
+	let urlFilter = getUrlFilter.call(this);
 
 	if(pages.length && pages[0].pluginType !== "eleventy-navigation") {
 		throw new Error("Incorrect argument passed to eleventyNavigationToHtml filter. You must call `eleventyNavigation` or `eleventyNavigationBreadcrumb` first, like: `collection.all | eleventyNavigation | eleventyNavigationToHtml | safe`");
@@ -121,9 +124,31 @@ function navigationToHtml(pages, options = {}) {
 	}).join("\n")}</${options.listElement}>` : "";
 }
 
+function navigationToMarkdown(pages, options = {}) {
+	options = Object.assign({
+		showExcerpt: false,
+		childDepth: 0
+	}, options);
+
+	let childDepth = 1 + options.childDepth;
+	options.childDepth++;
+
+	let urlFilter = getUrlFilter.call(this);
+
+	if(pages.length && pages[0].pluginType !== "eleventy-navigation") {
+		throw new Error("Incorrect argument passed to eleventyNavigationToMarkdown filter. You must call `eleventyNavigation` or `eleventyNavigationBreadcrumb` first, like: `collection.all | eleventyNavigation | eleventyNavigationToMarkdown | safe`");
+	}
+
+	let indent = (new Array(childDepth)).join("  ") || "";
+	return pages.length ? `${pages.map(entry => {
+		return `${indent}* [${entry.title}](${urlFilter(entry.url)})${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}\n${entry.children ? navigationToMarkdown.call(this, entry.children, options) : ""}`;
+	}).join("")}` : "";
+}
+
 module.exports = {
 	getDependencyGraph,
 	findNavigationEntries,
 	findBreadcrumbEntries,
-	toHtml: navigationToHtml
+	toHtml: navigationToHtml,
+	toMarkdown: navigationToMarkdown
 };

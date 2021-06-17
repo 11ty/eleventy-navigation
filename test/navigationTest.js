@@ -440,3 +440,46 @@ test("Breadcrumbs (include self)", t => {
 	t.is(obj[1].key, "child1");
 	t.is(obj[2].key, "grandchild1");
 });
+
+test("Output markdown", t => {
+	let obj = EleventyNavigation.findNavigationEntries([
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root1"
+				},
+				page: {
+					url: "root1.html"
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "root1",
+					key: "child1"
+				},
+				page: {
+					url: "child1.html"
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "child1",
+					key: "grandchild1"
+				},
+				page: {
+					url: "grandchild1.html"
+				}
+			}
+		}
+	]);
+
+	let html = EleventyNavigation.toMarkdown.call(fakeConfig, obj);
+	t.is(html, `* [root1](root1.html)
+  * [child1](child1.html)
+    * [grandchild1](grandchild1.html)
+`);
+});
