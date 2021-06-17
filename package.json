@@ -32,8 +32,8 @@
     "url": "https://zachleat.com/"
   },
   "license": "MIT",
-  "peerDependencies": {
-    "@11ty/eleventy": ">=0.7.0"
+  "11ty": {
+    "compatibility": ">=0.7 || >=1.0.0-canary"
   },
   "devDependencies": {
     "ava": "^3.15.0"
