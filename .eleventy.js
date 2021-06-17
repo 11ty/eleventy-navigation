@@ -15,7 +15,7 @@ module.exports = function(eleventyConfig) {
 		return EleventyNavigation.toHtml.call(eleventyConfig, pages, options);
 	});
 	eleventyConfig.addFilter("eleventyNavigationToMarkdown", function(pages, options) {
-		return EleventyNavigation.toHtml.call(eleventyConfig, pages, options);
+		return EleventyNavigation.toMarkdown.call(eleventyConfig, pages, options);
 	});
 };
 
