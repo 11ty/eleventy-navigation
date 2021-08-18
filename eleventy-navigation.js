@@ -13,9 +13,10 @@ function findNavigationEntries(nodes = [], key = "") {
 			}
 		}
 	}
-
+	let elements = pages.count;
+	
 	return pages.sort(function(a, b) {
-		return (a.order || 0) - (b.order || 0);
+		return (a.order || elements) - (b.order || elements);
 	}).map(function(entry) {
 		if(!entry.title) {
 			entry.title = entry.key;
