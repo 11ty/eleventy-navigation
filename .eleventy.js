@@ -4,10 +4,10 @@ const EleventyNavigation = require("./eleventy-navigation");
 // export the configuration function for plugin
 module.exports = function(eleventyConfig) {
 	try {
-    eleventyConfig.versionCheck(pkg["11ty"].compatibility);
-  } catch(e) {
-    console.log( `WARN: Eleventy Plugin (${pkg.name}) Compatibility: ${e.message}` );
-  }
+		eleventyConfig.versionCheck(pkg["11ty"].compatibility);
+	} catch(e) {
+		console.log( `WARN: Eleventy Plugin (${pkg.name}) Compatibility: ${e.message}` );
+	}
 
 	eleventyConfig.addFilter("eleventyNavigation", EleventyNavigation.findNavigationEntries);
 	eleventyConfig.addFilter("eleventyNavigationBreadcrumb", EleventyNavigation.findBreadcrumbEntries);
