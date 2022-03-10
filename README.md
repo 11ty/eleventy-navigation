@@ -1,4 +1,6 @@
-# eleventy-navigation
+<p align="center"><img src="https://www.11ty.dev/img/logo-github.png" alt="eleventy Logo"></p>
+
+# eleventy-navigation 🕚⚡️🎈🐀
 
 A plugin for creating hierarchical navigation in Eleventy projects. Supports breadcrumbs too!
 
