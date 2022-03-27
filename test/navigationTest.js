@@ -441,6 +441,15 @@ test("Breadcrumbs (include self)", t => {
 	t.is(obj[2].key, "grandchild1");
 });
 
+test("Breadcrumbs (options.handleMissing)", t => {
+	const entries = EleventyNavigation.findBreadcrumbEntries(
+		[],
+		"orphan",
+		{handleMissing: true}
+	);
+	t.is(entries.length, 0);
+});
+
 test("Output markdown", t => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
