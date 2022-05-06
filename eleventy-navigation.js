@@ -48,7 +48,7 @@ function getDependencyGraph(nodes) {
 
 function findBreadcrumbEntries(nodes, activeKey, options = {}) {
 	let graph = getDependencyGraph(nodes);
-	if (options.handleMissing && !graph.hasNode(activeKey)) {
+	if (options.allowMissing && !graph.hasNode(activeKey)) {
 		// Fail gracefully if the key isn't in the graph
 		return [];
 	}
