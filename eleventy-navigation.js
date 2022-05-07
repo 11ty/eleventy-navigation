@@ -79,6 +79,15 @@ function getUrlFilter() {
 	}
 }
 
+function buildHtmlAttr(name, values) {
+	// values could be array or string
+	if (!values || !values.length) {
+		return '';
+	}
+	const valueStr = Array.isArray(values) ? values.join(" ") : [values];
+	return ` ${name}="${valueStr}"`;
+}
+
 function navigationToHtml(pages, options = {}) {
 	options = Object.assign({
 		listElement: "ul",
@@ -124,7 +133,8 @@ function navigationToHtml(pages, options = {}) {
 			liClass.push(options.listItemHasChildrenClass);
 		}
 
-		return `<${options.listItemElement}${liClass.length ? ` class="${liClass.join(" ")}"` : ''}><a href="${urlFilter(entry.url)}"${aClass.length ? ` class="${aClass.join(" ")}"` : ''}>${entry.title}</a>${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml.call(this, entry.children, options) : ""}</${options.listItemElement}>`;
+		const aTag = `<a href="${urlFilter(entry.url)}"${buildHtmlAttr('class', aClass)}>${entry.title}</a>`;
+		return `<${options.listItemElement}${buildHtmlAttr('class', liClass)}>${aTag}${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml.call(this, entry.children, options) : ""}</${options.listItemElement}>`;
 	}).join("\n")}</${options.listElement}>` : "";
 }
 
