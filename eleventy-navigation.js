@@ -88,6 +88,10 @@ function buildHtmlAttr(name, values) {
 	return ` ${name}="${valueStr}"`;
 }
 
+function buildAllHtmlAttrs(attrs) {
+	return attrs.reduce((acc, { name, values }) => acc + buildHtmlAttr(name, values), '');
+}
+
 function navigationToHtml(pages, options = {}) {
 	options = Object.assign({
 		listElement: "ul",
@@ -115,6 +119,7 @@ function navigationToHtml(pages, options = {}) {
 	return pages.length ? `<${options.listElement}${!isChildList && options.listClass ? ` class="${options.listClass}"` : ''}>${pages.map(entry => {
 		let liClass = [];
 		let aClass = [];
+		let aAttrs = [];
 		if(options.listItemClass) {
 			liClass.push(options.listItemClass);
 		}
@@ -132,8 +137,11 @@ function navigationToHtml(pages, options = {}) {
 		if(options.listItemHasChildrenClass && entry.children && entry.children.length) {
 			liClass.push(options.listItemHasChildrenClass);
 		}
+		if(aClass.length) {
+			aAttrs.push({ name: "class", values: aClass });
+		}
 
-		const aTag = `<a href="${urlFilter(entry.url)}"${buildHtmlAttr('class', aClass)}>${entry.title}</a>`;
+		const aTag = `<a href="${urlFilter(entry.url)}"${buildAllHtmlAttrs(aAttrs)}>${entry.title}</a>`;
 		return `<${options.listItemElement}${buildHtmlAttr('class', liClass)}>${aTag}${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml.call(this, entry.children, options) : ""}</${options.listItemElement}>`;
 	}).join("\n")}</${options.listElement}>` : "";
 }
