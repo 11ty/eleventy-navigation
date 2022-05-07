@@ -103,6 +103,7 @@ function navigationToHtml(pages, options = {}) {
 		activeListItemClass: "",
 		anchorClass: "",
 		activeAnchorClass: "",
+		useAriaCurrentAttr: false,
 		showExcerpt: false,
 		isChildList: false
 	}, options);
@@ -132,6 +133,9 @@ function navigationToHtml(pages, options = {}) {
 			}
 			if(options.activeAnchorClass) {
 				aClass.push(options.activeAnchorClass);
+			}
+			if(options.useAriaCurrentAttr) {
+				aAttrs.push({ name: "aria-current", values: "page" });
 			}
 		}
 		if(options.listItemHasChildrenClass && entry.children && entry.children.length) {
