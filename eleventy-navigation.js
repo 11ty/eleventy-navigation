@@ -84,7 +84,7 @@ function buildHtmlAttr(name, values) {
 	if (!values || !values.length) {
 		return '';
 	}
-	const valueStr = Array.isArray(values) ? values.join(" ") : [values];
+	const valueStr = Array.isArray(values) ? values.join(" ") : values;
 	return ` ${name}="${valueStr}"`;
 }
 
