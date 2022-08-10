@@ -65,13 +65,21 @@ function findBreadcrumbEntries(nodes, activeKey, options = {}) {
 	}) : [];
 }
 
-function getUrlFilter() {
-	if("getFilter" in this) {
+function getUrlFilter(eleventyConfig) {
+	// First available in Eleventy 2.0.0-canary.15
+	// Short code path if pathPrefix is empty or the default
+	if(eleventyConfig.pathPrefix !== undefined && (eleventyConfig.pathPrefix === "/" || eleventyConfig.pathPrefix === "")) {
+		return function(url) {
+			return url;
+		};
+	}
+
+	if("getFilter" in eleventyConfig) {
 		// v0.10.0 and above
-		return this.getFilter("url");
-	} else if("nunjucksFilters" in this) {
+		return eleventyConfig.getFilter("url");
+	} else if("nunjucksFilters" in eleventyConfig) {
 		// backwards compat, hardcoded key
-		return this.nunjucksFilters.url;
+		return eleventyConfig.nunjucksFilters.url;
 	} else {
 		// Theoretically we could just move on here with a `url => url` but then `pathPrefix`
 		// would not work and it wouldn’t be obvious why—so let’s fail loudly to avoid that.
@@ -97,7 +105,7 @@ function navigationToHtml(pages, options = {}) {
 	let isChildList = !!options.isChildList;
 	options.isChildList = true;
 
-	let urlFilter = getUrlFilter.call(this);
+	let urlFilter = getUrlFilter(this)
 
 	if(pages.length && pages[0].pluginType !== "eleventy-navigation") {
 		throw new Error("Incorrect argument passed to eleventyNavigationToHtml filter. You must call `eleventyNavigation` or `eleventyNavigationBreadcrumb` first, like: `collection.all | eleventyNavigation | eleventyNavigationToHtml | safe`");
@@ -137,7 +145,7 @@ function navigationToMarkdown(pages, options = {}) {
 	let childDepth = 1 + options.childDepth;
 	options.childDepth++;
 
-	let urlFilter = getUrlFilter.call(this);
+	let urlFilter = getUrlFilter(this);
 
 	if(pages.length && pages[0].pluginType !== "eleventy-navigation") {
 		throw new Error("Incorrect argument passed to eleventyNavigationToMarkdown filter. You must call `eleventyNavigation` or `eleventyNavigationBreadcrumb` first, like: `collection.all | eleventyNavigation | eleventyNavigationToMarkdown | safe`");
