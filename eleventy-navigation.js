@@ -66,9 +66,9 @@ function findBreadcrumbEntries(nodes, activeKey, options = {}) {
 }
 
 function getUrlFilter(eleventyConfig) {
-	// First available in Eleventy 2.0.0-canary.15
-	// Short code path if pathPrefix is empty or the default
-	if(eleventyConfig.pathPrefix !== undefined && (eleventyConfig.pathPrefix === "/" || eleventyConfig.pathPrefix === "")) {
+	// eleventyConfig.pathPrefix was first available in Eleventy 2.0.0-canary.15
+	// And in Eleventy 2.0.0-canary.15 we recommend the a built-in transform for pathPrefix
+	if(eleventyConfig.pathPrefix !== undefined) {
 		return function(url) {
 			return url;
 		};
