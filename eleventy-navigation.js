@@ -1,22 +1,40 @@
 const DepGraph = require("dependency-graph").DepGraph;
 
 function findNavigationEntries(nodes = [], key = "") {
-	let pages = [];
+	let orderedpages = [];
+	let nonorderedpages = [];
 	for(let entry of nodes) {
 		if(entry.data && entry.data.eleventyNavigation) {
 			let nav = entry.data.eleventyNavigation;
 			if(!key && !nav.parent || nav.parent === key) {
-				pages.push(Object.assign({}, nav, {
-					url: nav.url || entry.data.page.url,
-					pluginType: "eleventy-navigation"
-				}, key ? { parentKey: key } : {}));
+				if(nav.order && nav.order != 0) {
+					orderedpages.push(Object.assign({}, nav, {
+						url: nav.url || entry.data.page.url,
+						pluginType: "eleventy-navigation"
+					}, key ? { parentKey: key } : {}));
+				} else {
+					nonorderedpages.push(Object.assign({}, nav, {
+						url: nav.url || entry.data.page.url,
+						pluginType: "eleventy-navigation"
+					}, key ? { parentKey: key } : {}));
+				}
 			}
 		}
 	}
 
-	return pages.sort(function(a, b) {
-		return (a.order || 0) - (b.order || 0);
-	}).map(function(entry) {
+	orderedoutput = orderedpages.sort(function(a, b) {
+		let x = a.order;
+		let y = b.order;
+
+		return x -b;
+	});
+	nonorderedoutput = nonorderedpages.sort(function(a, b) {
+		let x = a.key.toUpperCase();
+		let y = b.key.toUpperCase();
+
+		return +(x > y) || +(x === y) - 1;
+	});
+	return [...orderedoutput, ...nonorderedoutput].map(function(entry) {
 		if(!entry.title) {
 			entry.title = entry.key;
 		}
@@ -25,6 +43,7 @@ function findNavigationEntries(nodes = [], key = "") {
 		}
 		return entry;
 	});
+
 }
 
 function findDependencies(pages, depGraph, parentKey) {
@@ -131,7 +150,6 @@ function navigationToHtml(pages, options = {}) {
 		if(options.listItemHasChildrenClass && entry.children && entry.children.length) {
 			liClass.push(options.listItemHasChildrenClass);
 		}
-
 		return `<${options.listItemElement}${liClass.length ? ` class="${liClass.join(" ")}"` : ''}><a href="${urlFilter(entry.url)}"${aClass.length ? ` class="${aClass.join(" ")}"` : ''}>${entry.title}</a>${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml.call(this, entry.children, options) : ""}</${options.listItemElement}>`;
 	}).join("\n")}</${options.listElement}>` : "";
 }
