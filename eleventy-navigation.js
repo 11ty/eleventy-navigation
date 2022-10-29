@@ -6,10 +6,13 @@ function findNavigationEntries(nodes = [], key = "") {
 		if(entry.data && entry.data.eleventyNavigation) {
 			let nav = entry.data.eleventyNavigation;
 			if(!key && !nav.parent || nav.parent === key) {
+				// Extract the page data without the eleventyNavigation key
+				const {eleventyNavigation, ...pageDataWithoutNav} = entry.data
 				pages.push(Object.assign({}, nav, {
 					url: nav.url || entry.data.page.url,
 					pluginType: "eleventy-navigation"
-				}, key ? { parentKey: key } : {}));
+				}, key ? { parentKey: key } : {},
+				{ data: pageDataWithoutNav }));
 			}
 		}
 	}
