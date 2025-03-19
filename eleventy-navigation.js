@@ -84,14 +84,22 @@ function getDependencyGraph(nodes) {
 	return graph;
 }
 
+function isOptionMatch(options, name) {
+	// Liquid.js issue #35
+	if(Array.isArray(options)) {
+		return options[options.indexOf(name)]
+	}
+	return options[name];
+}
+
 function findBreadcrumbEntries(nodes, activeKey, options = {}) {
 	let graph = getDependencyGraph(nodes);
-	if (options.allowMissing && !graph.hasNode(activeKey)) {
+	if (isOptionMatch(options, "allowMissing") && !graph.hasNode(activeKey)) {
 		// Fail gracefully if the key isn't in the graph
 		return [];
 	}
 	let deps = graph.dependenciesOf(activeKey);
-	if(options.includeSelf) {
+	if(isOptionMatch(options, "includeSelf")) {
 		deps.push(activeKey);
 	}
 
@@ -157,7 +165,7 @@ function navigationToHtml(pages, options = {}) {
 	let isChildList = !!options.isChildList;
 	options.isChildList = true;
 
-	let urlFilter = getUrlFilter(this)
+	let urlFilter;
 
 	if(pages.length && pages[0].pluginType !== "eleventy-navigation") {
 		throw new Error("Incorrect argument passed to eleventyNavigationToHtml filter. You must call `eleventyNavigation` or `eleventyNavigationBreadcrumb` first, like: `collection.all | eleventyNavigation | eleventyNavigationToHtml | safe`");
@@ -174,6 +182,10 @@ function navigationToHtml(pages, options = {}) {
 			aClass.push(options.anchorClass);
 		}
 		if(entry.url) {
+			if(!urlFilter) {
+				// don’t get if not used
+				urlFilter = getUrlFilter(this);
+			}
 			aAttrs.push({name: "href", values: urlFilter(entry.url)})
 		}
 		if(options.activeKey === entry.key) {
@@ -216,7 +228,7 @@ function navigationToMarkdown(pages, options = {}) {
 	let childDepth = 1 + options.childDepth;
 	options.childDepth++;
 
-	let urlFilter = getUrlFilter(this);
+	let urlFilter;
 
 	if(pages.length && pages[0].pluginType !== "eleventy-navigation") {
 		throw new Error("Incorrect argument passed to eleventyNavigationToMarkdown filter. You must call `eleventyNavigation` or `eleventyNavigationBreadcrumb` first, like: `collection.all | eleventyNavigation | eleventyNavigationToMarkdown | safe`");
@@ -224,6 +236,10 @@ function navigationToMarkdown(pages, options = {}) {
 
 	let indent = (new Array(childDepth)).join("  ") || "";
 	return pages.length ? `${pages.map(entry => {
+		if(entry.url && !urlFilter) {
+			// don’t get if not used
+			urlFilter = getUrlFilter(this);
+		}
 		return `${indent}* ${entry.url ? `[` : ""}${entry.title}${entry.url ? `](${urlFilter(entry.url)})` : ""}${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}\n${entry.children ? navigationToMarkdown.call(this, entry.children, options) : ""}`;
 	}).join("")}` : "";
 }

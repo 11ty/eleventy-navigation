@@ -610,3 +610,33 @@ test("Multiple roots, multiple keys", t => {
 	t.deepEqual(obj[0].children.map(e => e.key), []);
 	t.deepEqual(obj[1].children.map(e => e.key), []);
 });
+
+test("Breadcrumb include self", t => {
+	let nodes = [
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root1",
+				}
+			}
+		}
+	];
+	let obj = EleventyNavigation.findBreadcrumbEntries(nodes, "root1", { includeSelf: true });
+
+	t.is(EleventyNavigation.toHtml(obj), `<ul><li><a>root1</a></li></ul>`);
+});
+
+test("Breadcrumb include self (Liquid.js #35)", t => {
+	let nodes = [
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root1",
+				}
+			}
+		}
+	];
+	let obj = EleventyNavigation.findBreadcrumbEntries(nodes, "root1", [ "includeSelf", true ]);
+
+	t.is(EleventyNavigation.toHtml(obj), `<ul><li><a>root1</a></li></ul>`);
+});
