@@ -499,3 +499,27 @@ test("Output markdown", t => {
     * [grandchild1](grandchild1.html)
 `);
 });
+
+test("Navigation entry contains page data", t => {
+	let obj = EleventyNavigation.findNavigationEntries([
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root1"
+				},
+				page: {
+					url: "root1.html"
+				},
+				tags: [
+					"robot",
+					"lesbian"
+				]
+			}
+		}
+	]);
+
+	// Page data like tags should be included in the obj
+	t.deepEqual(obj[0].data.tags, ["robot", "lesbian"])
+	// Don't include the eleventyNavigation data inside the returned data
+	t.false(obj[0].data.hasOwnProperty("eleventyNavigation"))
+});
