@@ -187,6 +187,71 @@ test("One root, three child navigation (order)", t => {
 	t.is(obj[0].children.map(e => e.key).join(","), "child2,child3,child1,child4");
 });
 
+test("One root, three child navigation, one with 0 (order)", t => {
+	let obj = EleventyNavigation.findNavigationEntries([
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root1"
+				},
+				page: {
+					url: "root1.html"
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "root1",
+					key: "child1",
+					order: 3
+				},
+				page: {
+					url: "child1.html"
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "root1",
+					key: "child2",
+					order: 0
+				},
+				page: {
+					url: "child2.html"
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "root1",
+					key: "child3",
+					order: 2
+				},
+				page: {
+					url: "child3.html"
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "root1",
+					key: "child4"
+				},
+				page: {
+					url: "child4.html"
+				}
+			}
+		}
+	]);
+	t.is(obj[0].key, "root1");
+	t.is(obj[0].children.length, 4);
+	t.is(obj[0].children.map(e => e.key).join(","), "child2,child3,child1,child4");
+});
+
 test("One root, three child navigation (implied order)", t => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{

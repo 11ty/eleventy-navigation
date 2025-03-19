@@ -43,13 +43,13 @@ function findNavigationEntries(nodes = [], key = "") {
 			order[1] = -Infinity;
 		}
 
-		if(!order[0] && !order[1]) {
+		if(order[0] === undefined && order[1] === undefined) {
 			return 0;
 		}
-		if(!order[1]) {
+		if(order[1] === undefined) {
 			return -1;
 		}
-		if(!order[0]) {
+		if(order[0] === undefined) {
 			return 1;
 		}
 		return order[0] - order[1];
