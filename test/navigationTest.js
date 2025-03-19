@@ -169,13 +169,22 @@ test("One root, three child navigation (order)", t => {
 					url: "child3.html"
 				}
 			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "root1",
+					key: "child4"
+				},
+				page: {
+					url: "child4.html"
+				}
+			}
 		}
 	]);
 	t.is(obj[0].key, "root1");
-	t.is(obj[0].children.length, 3);
-	t.is(obj[0].children[0].key, "child2");
-	t.is(obj[0].children[1].key, "child3");
-	t.is(obj[0].children[2].key, "child1");
+	t.is(obj[0].children.length, 4);
+	t.is(obj[0].children.map(e => e.key).join(","), "child2,child3,child1,child4");
 });
 
 test("One root, three child navigation (implied order)", t => {
@@ -228,9 +237,7 @@ test("One root, three child navigation (implied order)", t => {
 	]);
 	t.is(obj[0].key, "root1");
 	t.is(obj[0].children.length, 3);
-	t.is(obj[0].children[0].key, "child3");
-	t.is(obj[0].children[1].key, "child2");
-	t.is(obj[0].children[2].key, "child1");
+	t.is(obj[0].children.map(e => e.key).join(","), "child3,child1,child2");
 });
 
 test("Show throw an error without a config", t => {
@@ -291,7 +298,7 @@ test("Checking active class on output HTML", t => {
 		activeListItemClass: "this-is-the-active-item"
 	});
 	t.true(activeHtmlItem.indexOf(`<li class="this-is-the-active-item"><a href="child1.html">child1</a></li>`) > -1);
-  
+
 	let activeHtmlAnchor = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		activeKey: "child1",
 		activeAnchorClass: "this-is-the-active-anchor"

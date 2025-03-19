@@ -14,8 +14,18 @@ function findNavigationEntries(nodes = [], key = "") {
 		}
 	}
 
-	return pages.sort(function(a, b) {
-		return (a.order || 0) - (b.order || 0);
+	return Object.values(pages).flat().sort(function(a, b) {
+		let order = [a.order, b.order];
+		if(!order[0] && !order[1]) {
+			return 0;
+		}
+		if(!order[1]) {
+			return -1;
+		}
+		if(!order[0]) {
+			return 1;
+		}
+		return order[0] - order[1];
 	}).map(function(entry) {
 		if(!entry.title) {
 			entry.title = entry.key;
