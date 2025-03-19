@@ -100,6 +100,19 @@ function getUrlFilter(eleventyConfig) {
 	}
 }
 
+function buildHtmlAttr(name, values) {
+	// values could be array or string
+	if (!values || !values.length) {
+		return '';
+	}
+	const valueStr = Array.isArray(values) ? values.join(" ") : values;
+	return ` ${name}="${valueStr}"`;
+}
+
+function buildAllHtmlAttrs(attrs) {
+	return attrs.reduce((acc, { name, values }) => acc + buildHtmlAttr(name, values), '');
+}
+
 function navigationToHtml(pages, options = {}) {
 	options = Object.assign({
 		listElement: "ul",
@@ -111,6 +124,7 @@ function navigationToHtml(pages, options = {}) {
 		activeListItemClass: "",
 		anchorClass: "",
 		activeAnchorClass: "",
+		useAriaCurrentAttr: false,
 		showExcerpt: false,
 		isChildList: false
 	}, options);
@@ -127,6 +141,7 @@ function navigationToHtml(pages, options = {}) {
 	return pages.length ? `<${options.listElement}${!isChildList && options.listClass ? ` class="${options.listClass}"` : ''}>${pages.map(entry => {
 		let liClass = [];
 		let aClass = [];
+		let aAttrs = [];
 		if(options.listItemClass) {
 			liClass.push(options.listItemClass);
 		}
@@ -140,12 +155,19 @@ function navigationToHtml(pages, options = {}) {
 			if(options.activeAnchorClass) {
 				aClass.push(options.activeAnchorClass);
 			}
+			if(options.useAriaCurrentAttr) {
+				aAttrs.push({ name: "aria-current", values: "page" });
+			}
 		}
 		if(options.listItemHasChildrenClass && entry.children && entry.children.length) {
 			liClass.push(options.listItemHasChildrenClass);
 		}
+		if(aClass.length) {
+			aAttrs.push({ name: "class", values: aClass });
+		}
 
-		return `<${options.listItemElement}${liClass.length ? ` class="${liClass.join(" ")}"` : ''}><a href="${urlFilter(entry.url)}"${aClass.length ? ` class="${aClass.join(" ")}"` : ''}>${entry.title}</a>${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml.call(this, entry.children, options) : ""}</${options.listItemElement}>`;
+		const aTag = `<a href="${urlFilter(entry.url)}"${buildAllHtmlAttrs(aAttrs)}>${entry.title}</a>`;
+		return `<${options.listItemElement}${buildHtmlAttr('class', liClass)}>${aTag}${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml.call(this, entry.children, options) : ""}</${options.listItemElement}>`;
 	}).join("\n")}</${options.listElement}>` : "";
 }
 

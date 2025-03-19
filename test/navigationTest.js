@@ -265,30 +265,32 @@ let fakeConfig = {
 	}
 };
 
-test("Checking active class on output HTML", t => {
-	let obj = EleventyNavigation.findNavigationEntries([
-		{
-			data: {
-				eleventyNavigation: {
-					key: "root1"
-				},
-				page: {
-					url: "root1.html"
-				}
-			}
-		},
-		{
-			data: {
-				eleventyNavigation: {
-					parent: "root1",
-					key: "child1"
-				},
-				page: {
-					url: "child1.html"
-				}
+let fakeNavigationEntries = [
+	{
+		data: {
+			eleventyNavigation: {
+				key: "root1"
+			},
+			page: {
+				url: "root1.html"
 			}
 		}
-	]);
+	},
+	{
+		data: {
+			eleventyNavigation: {
+				parent: "root1",
+				key: "child1"
+			},
+			page: {
+				url: "child1.html"
+			}
+		}
+	}
+];
+
+test("Checking active class on output HTML", t => {
+	let obj = EleventyNavigation.findNavigationEntries(fakeNavigationEntries);
 
 	let html = EleventyNavigation.toHtml.call(fakeConfig, obj);
 	t.true(html.indexOf(`<li><a href="child1.html">child1</a></li>`) > -1);
@@ -313,30 +315,21 @@ test("Checking active class on output HTML", t => {
 	t.true(activeHtmlItemAndAnchor.indexOf(`<li class="this-is-the-active-item"><a href="child1.html" class="this-is-the-active-anchor">child1</a></li>`) > -1);
 });
 
+test("Checking aria-current option on output HTML", t => {
+	let obj = EleventyNavigation.findNavigationEntries(fakeNavigationEntries);
+
+	let html = EleventyNavigation.toHtml.call(fakeConfig, obj);
+	t.true(html.indexOf(`<li><a href="child1.html">child1</a></li>`) > -1);
+
+	let activeHtmlAnchor = EleventyNavigation.toHtml.call(fakeConfig, obj, {
+		activeKey: "child1",
+		useAriaCurrentAttr: true
+	});
+	t.true(activeHtmlAnchor.indexOf(`<li><a href="child1.html" aria-current="page">child1</a></li>`) > -1);
+});
+
 test("Checking has children class on output HTML", t => {
-	let obj = EleventyNavigation.findNavigationEntries([
-		{
-			data: {
-				eleventyNavigation: {
-					key: "root1"
-				},
-				page: {
-					url: "root1.html"
-				}
-			}
-		},
-		{
-			data: {
-				eleventyNavigation: {
-					parent: "root1",
-					key: "child1"
-				},
-				page: {
-					url: "child1.html"
-				}
-			}
-		}
-	]);
+	let obj = EleventyNavigation.findNavigationEntries(fakeNavigationEntries);
 
 	let activeHtml = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		listItemHasChildrenClass: "item-has-children"
