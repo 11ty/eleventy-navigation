@@ -7,6 +7,7 @@ function findNavigationEntries(nodes = [], key = "") {
 		if(entry.data && entry.data.eleventyNavigation) {
 			// Extract the page data without the eleventyNavigation key
 			let {eleventyNavigation, ...pageDataWithoutNav} = entry.data || {};
+			delete pageDataWithoutNav.collections;
 
 			let pageKey;
 			if(!key && !eleventyNavigation.parent) { // top level (no parents)

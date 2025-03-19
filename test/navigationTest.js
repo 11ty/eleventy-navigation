@@ -506,7 +506,8 @@ test("Navigation entry contains page data", t => {
 				tags: [
 					"robot",
 					"lesbian"
-				]
+				],
+				collections: {}
 			}
 		}
 	]);
@@ -515,6 +516,7 @@ test("Navigation entry contains page data", t => {
 	t.deepEqual(obj[0].data.tags, ["robot", "lesbian"])
 	// Don't include the eleventyNavigation data inside the returned data
 	t.false(obj[0].data.hasOwnProperty("eleventyNavigation"))
+	t.false(obj[0].data.hasOwnProperty("collections"))
 });
 
 test("Missing url", t => {
