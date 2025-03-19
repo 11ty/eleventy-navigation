@@ -148,6 +148,9 @@ function navigationToHtml(pages, options = {}) {
 		if(options.anchorClass) {
 			aClass.push(options.anchorClass);
 		}
+		if(entry.url) {
+			aAttrs.push({name: "href", values: urlFilter(entry.url)})
+		}
 		if(options.activeKey === entry.key) {
 			if(options.activeListItemClass) {
 				liClass.push(options.activeListItemClass);
@@ -166,8 +169,16 @@ function navigationToHtml(pages, options = {}) {
 			aAttrs.push({ name: "class", values: aClass });
 		}
 
-		const aTag = `<a href="${urlFilter(entry.url)}"${buildAllHtmlAttrs(aAttrs)}>${entry.title}</a>`;
-		return `<${options.listItemElement}${buildHtmlAttr('class', liClass)}>${aTag}${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml.call(this, entry.children, options) : ""}</${options.listItemElement}>`;
+		let postfix = "";
+
+		// Helper to show pin/order in text:
+		// let hasOrder = entry.order || entry.order === 0;
+		// if(process.env.ELEVENTY_RUN_MODE === "serve" && (hasOrder || entry.pinned)) {
+		// 	postfix = ` (${entry.pinned ? "📌" : ""}${entry.order ?? ""})`;
+		// }
+
+		let aTag = `<a${buildAllHtmlAttrs(aAttrs)}>${entry.title}${postfix}</a>`;
+		return `<${options.listItemElement}${buildHtmlAttr("class", liClass)}>${aTag}${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml.call(this, entry.children, options) : ""}</${options.listItemElement}>`;
 	}).join("\n")}</${options.listElement}>` : "";
 }
 
@@ -188,7 +199,7 @@ function navigationToMarkdown(pages, options = {}) {
 
 	let indent = (new Array(childDepth)).join("  ") || "";
 	return pages.length ? `${pages.map(entry => {
-		return `${indent}* [${entry.title}](${urlFilter(entry.url)})${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}\n${entry.children ? navigationToMarkdown.call(this, entry.children, options) : ""}`;
+		return `${indent}* ${entry.url ? `[` : ""}${entry.title}${entry.url ? `](${urlFilter(entry.url)})` : ""}${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}\n${entry.children ? navigationToMarkdown.call(this, entry.children, options) : ""}`;
 	}).join("")}` : "";
 }
 

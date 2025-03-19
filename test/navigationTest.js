@@ -293,26 +293,26 @@ test("Checking active class on output HTML", t => {
 	let obj = EleventyNavigation.findNavigationEntries(fakeNavigationEntries);
 
 	let html = EleventyNavigation.toHtml.call(fakeConfig, obj);
-	t.true(html.indexOf(`<li><a href="child1.html">child1</a></li>`) > -1);
+	t.is(html, `<ul><li><a href="root1.html">root1</a><ul><li><a href="child1.html">child1</a></li></ul></li></ul>`);
 
 	let activeHtmlItem = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		activeKey: "child1",
 		activeListItemClass: "this-is-the-active-item"
 	});
-	t.true(activeHtmlItem.indexOf(`<li class="this-is-the-active-item"><a href="child1.html">child1</a></li>`) > -1);
+	t.is(activeHtmlItem, `<ul><li><a href="root1.html">root1</a><ul><li class="this-is-the-active-item"><a href="child1.html">child1</a></li></ul></li></ul>`);
 
 	let activeHtmlAnchor = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		activeKey: "child1",
 		activeAnchorClass: "this-is-the-active-anchor"
 	});
-	t.true(activeHtmlAnchor.indexOf(`<li><a href="child1.html" class="this-is-the-active-anchor">child1</a></li>`) > -1);
+	t.is(activeHtmlAnchor, `<ul><li><a href="root1.html">root1</a><ul><li><a href="child1.html" class="this-is-the-active-anchor">child1</a></li></ul></li></ul>`);
 
 	let activeHtmlItemAndAnchor = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		activeKey: "child1",
 		activeListItemClass: "this-is-the-active-item",
 		activeAnchorClass: "this-is-the-active-anchor"
 	});
-	t.true(activeHtmlItemAndAnchor.indexOf(`<li class="this-is-the-active-item"><a href="child1.html" class="this-is-the-active-anchor">child1</a></li>`) > -1);
+	t.is(activeHtmlItemAndAnchor, `<ul><li><a href="root1.html">root1</a><ul><li class="this-is-the-active-item"><a href="child1.html" class="this-is-the-active-anchor">child1</a></li></ul></li></ul>`);
 });
 
 test("Checking aria-current option on output HTML", t => {
@@ -516,3 +516,18 @@ test("Navigation entry contains page data", t => {
 	// Don't include the eleventyNavigation data inside the returned data
 	t.false(obj[0].data.hasOwnProperty("eleventyNavigation"))
 });
+
+test("Missing url", t => {
+	let obj = EleventyNavigation.findNavigationEntries([
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root1",
+				}
+			}
+		}
+	]);
+
+	t.is(EleventyNavigation.toHtml.call(fakeConfig, obj), `<ul><li><a>root1</a></li></ul>`);
+});
+
