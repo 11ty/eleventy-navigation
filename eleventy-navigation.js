@@ -4,10 +4,9 @@ function findNavigationEntries(nodes = [], key = "") {
 	let keys = key.split(",").filter(k => Boolean(k));
 	let pages = {};
 	for(let entry of nodes) {
-		if(entry.data && entry.data.eleventyNavigation) {
-			// Extract the page data without the eleventyNavigation key
-			let {eleventyNavigation, ...pageDataWithoutNav} = entry.data || {};
-			delete pageDataWithoutNav.collections;
+		let data = entry?.data || {};
+		if(data?.eleventyNavigation) {
+			let {eleventyNavigation} = data || {};
 
 			let pageKey;
 			if(!key && !eleventyNavigation.parent) { // top level (no parents)
@@ -20,9 +19,9 @@ function findNavigationEntries(nodes = [], key = "") {
 				if(!pages[pageKey]) {
 					pages[pageKey] = [];
 				}
-				let url = eleventyNavigation.url ?? entry.data?.page?.url;
+				let url = eleventyNavigation.url ?? data?.page?.url;
 
-				pages[pageKey].push(Object.assign({ data: pageDataWithoutNav }, eleventyNavigation, {
+				pages[pageKey].push(Object.assign({ data }, eleventyNavigation, {
 					...(url ? { url } : {}),
 					pluginType: "eleventy-navigation",
 					...(keys.length > 0 ? { parentKey: eleventyNavigation.parent } : {}),
