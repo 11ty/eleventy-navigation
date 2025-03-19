@@ -531,3 +531,80 @@ test("Missing url", t => {
 	t.is(EleventyNavigation.toHtml.call(fakeConfig, obj), `<ul><li><a>root1</a></li></ul>`);
 });
 
+test("Multiple roots", t => {
+	let obj = EleventyNavigation.findNavigationEntries([
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root1"
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "root1",
+					key: "child1",
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root2"
+				},
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "root2",
+					key: "child3",
+				}
+			}
+		}
+	]);
+
+	t.deepEqual(obj.map(e => e.key), ["root1", "root2"]);
+	t.deepEqual(obj[0].children.map(e => e.key), ["child1"]);
+	t.deepEqual(obj[1].children.map(e => e.key), ["child3"]);
+});
+
+test("Multiple roots, multiple keys", t => {
+	let obj = EleventyNavigation.findNavigationEntries([
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root1"
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "root1",
+					key: "child1",
+				}
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					key: "root2"
+				},
+			}
+		},
+		{
+			data: {
+				eleventyNavigation: {
+					parent: "root2",
+					key: "child3",
+				}
+			}
+		}
+	], "root1,root2");
+
+	t.deepEqual(obj.map(e => e.key), ["child1", "child3"]);
+	t.deepEqual(obj[0].children.map(e => e.key), []);
+	t.deepEqual(obj[1].children.map(e => e.key), []);
+});

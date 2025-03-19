@@ -1,24 +1,48 @@
 const DepGraph = require("dependency-graph").DepGraph;
 
 function findNavigationEntries(nodes = [], key = "") {
-	let pages = [];
+	let keys = key.split(",").filter(k => Boolean(k));
+	let pages = {};
 	for(let entry of nodes) {
 		if(entry.data && entry.data.eleventyNavigation) {
-			let nav = entry.data.eleventyNavigation;
-			if(!key && !nav.parent || nav.parent === key) {
-				// Extract the page data without the eleventyNavigation key
-				const {eleventyNavigation, ...pageDataWithoutNav} = entry.data
-				pages.push(Object.assign({}, nav, {
-					url: nav.url || entry.data.page.url,
-					pluginType: "eleventy-navigation"
-				}, key ? { parentKey: key } : {},
-				{ data: pageDataWithoutNav }));
+			// Extract the page data without the eleventyNavigation key
+			let {eleventyNavigation, ...pageDataWithoutNav} = entry.data || {};
+
+			let pageKey;
+			if(!key && !eleventyNavigation.parent) { // top level (no parents)
+				pageKey = "__default";
+			} else if(keys.includes(eleventyNavigation.parent)) {
+				pageKey = eleventyNavigation.parent;
+			}
+
+			if(pageKey) {
+				if(!pages[pageKey]) {
+					pages[pageKey] = [];
+				}
+				let url = eleventyNavigation.url ?? entry.data?.page?.url;
+
+				pages[pageKey].push(Object.assign({ data: pageDataWithoutNav }, eleventyNavigation, {
+					...(url ? { url } : {}),
+					pluginType: "eleventy-navigation",
+					...(keys.length > 0 ? { parentKey: eleventyNavigation.parent } : {}),
+				}));
 			}
 		}
 	}
 
 	return Object.values(pages).flat().sort(function(a, b) {
+		if(a.pinned && b.pinned) {
+			return (a.order || 0) - (b.order || 0);
+		}
+
 		let order = [a.order, b.order];
+		if(a.pinned) {
+			order[0] = -Infinity;
+		}
+		if(b.pinned) {
+			order[1] = -Infinity;
+		}
+
 		if(!order[0] && !order[1]) {
 			return 0;
 		}
