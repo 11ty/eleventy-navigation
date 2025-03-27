@@ -702,3 +702,12 @@ test("Breadcrumb include self (Liquid.js #35)", t => {
 
 	t.is(EleventyNavigation.toHtml(obj), `<ul><li><a>root1</a></li></ul>`);
 });
+
+test("Use top level details", t => {
+	let obj = EleventyNavigation.findNavigationEntries(fakeNavigationEntries);
+
+	let html = EleventyNavigation.toHtml.call(fakeConfig, obj, {
+		useTopLevelDetails: true
+	});
+	t.is(html, `<ul><li><details><summary><a href="root1.html">root1</a></summary><ul><li><a href="child1.html">child1</a></li></ul></details></li></ul>`);
+});

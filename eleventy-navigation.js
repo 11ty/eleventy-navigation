@@ -158,7 +158,8 @@ function navigationToHtml(pages, options = {}) {
 		activeAnchorClass: "",
 		useAriaCurrentAttr: false,
 		showExcerpt: false,
-		isChildList: false
+		isChildList: false,
+		useTopLevelDetails: false,
 	}, options);
 
 	let isChildList = !!options.isChildList;
@@ -213,8 +214,19 @@ function navigationToHtml(pages, options = {}) {
 		// 	postfix = ` (${entry.pinned ? "📌" : ""}${entry.order ?? ""})`;
 		// }
 
-		let aTag = `<a${buildAllHtmlAttrs(aAttrs)}>${entry.title}${postfix}</a>`;
-		return `<${options.listItemElement}${buildHtmlAttr("class", liClass)}>${aTag}${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${entry.children ? navigationToHtml.call(this, entry.children, options) : ""}</${options.listItemElement}>`;
+		let aAttrsStr = buildAllHtmlAttrs(aAttrs);
+		let itemTitle = entry.title + postfix;
+
+		let titleHtml = `<a${aAttrsStr}>${itemTitle}</a>`;
+		let titleHtmlStart = titleHtml;
+		let titleHtmlEnd = "";
+		if(options.useTopLevelDetails && !isChildList && entry.children) {
+			titleHtmlStart = `<details><summary>${titleHtml}</summary>`;
+			titleHtmlEnd = "</details>";
+		}
+		let childContentStr = entry.children ? navigationToHtml.call(this, entry.children, options) : "";
+
+		return `<${options.listItemElement}${buildHtmlAttr("class", liClass)}>${titleHtmlStart}${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${childContentStr}${titleHtmlEnd}</${options.listItemElement}>`;
 	}).join("\n")}</${options.listElement}>` : "";
 }
 
