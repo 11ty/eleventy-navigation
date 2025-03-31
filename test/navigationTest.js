@@ -709,5 +709,5 @@ test("Use top level details", t => {
 	let html = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		useTopLevelDetails: true
 	});
-	t.is(html, `<ul><li><details><summary><a href="root1.html">root1</a></summary><ul><li><a href="child1.html">child1</a></li></ul></details></li></ul>`);
+	t.is(html, `<ul><li><a href="root1.html">root1</a><details><summary>root1</summary><ul><li><a href="child1.html">child1</a></li></ul></details></li></ul>`);
 });

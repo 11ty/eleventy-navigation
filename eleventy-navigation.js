@@ -221,7 +221,13 @@ function navigationToHtml(pages, options = {}) {
 		let titleHtmlStart = titleHtml;
 		let titleHtmlEnd = "";
 		if(options.useTopLevelDetails && !isChildList && entry.children) {
-			titleHtmlStart = `<details><summary>${titleHtml}</summary>`;
+			let hasLink = Boolean(aAttrsStr);
+			if(hasLink) {
+				// No other interactive elements in <summary>
+				titleHtmlStart = `${titleHtml}<details><summary>${itemTitle}</summary>`;
+			} else {
+				titleHtmlStart = `<details><summary>${itemTitle}</summary>`;
+			}
 			titleHtmlEnd = "</details>";
 		}
 		let childContentStr = entry.children ? navigationToHtml.call(this, entry.children, options) : "";
