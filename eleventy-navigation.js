@@ -160,7 +160,7 @@ function navigationToHtml(pages, options = {}) {
 		showExcerpt: false,
 		isChildList: false,
 		useTopLevelDetails: false,
-		anchorWithoutLinkElement: "a", // default, better to use span
+		anchorElementWithoutHref: "a", // default, better to use span
 	}, options);
 
 	let isChildList = !!options.isChildList;
@@ -222,8 +222,8 @@ function navigationToHtml(pages, options = {}) {
 		let titleHtmlStart = `<a${aAttrsStr}>${itemTitle}</a>`;
 
 		// purely defensive use of `useTopLevelDetails` here
-		if(options.anchorWithoutLinkElement && !hasLink) {
-			titleHtmlStart = `<${options.anchorWithoutLinkElement}>${itemTitle}</${options.anchorWithoutLinkElement}>`;
+		if(options.anchorElementWithoutHref && !hasLink) {
+			titleHtmlStart = `<${options.anchorElementWithoutHref}>${itemTitle}</${options.anchorElementWithoutHref}>`;
 		}
 
 		let titleHtmlEnd = "";

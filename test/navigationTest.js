@@ -741,7 +741,7 @@ test("Use top level details with empty url", t => {
 
 	let html = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		useTopLevelDetails: true,
-		anchorWithoutLinkElement: "span",
+		anchorElementWithoutHref: "span",
 	});
 	t.is(html, `<ul><li><a href="root1.html">root1</a><details><summary>root1</summary><ul><li><span>child1</span></li></ul></details></li></ul>`);
 });
