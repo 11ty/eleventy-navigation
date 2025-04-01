@@ -160,6 +160,7 @@ function navigationToHtml(pages, options = {}) {
 		showExcerpt: false,
 		isChildList: false,
 		useTopLevelDetails: false,
+		anchorWithoutLinkElement: "a", // default, better to use span
 	}, options);
 
 	let isChildList = !!options.isChildList;
@@ -215,21 +216,27 @@ function navigationToHtml(pages, options = {}) {
 		// }
 
 		let aAttrsStr = buildAllHtmlAttrs(aAttrs);
+		let hasLink = aAttrs.find(entry => entry.name === "href");
 		let itemTitle = entry.title + postfix;
 
-		let titleHtml = `<a${aAttrsStr}>${itemTitle}</a>`;
-		let titleHtmlStart = titleHtml;
+		let titleHtmlStart = `<a${aAttrsStr}>${itemTitle}</a>`;
+
+		// purely defensive use of `useTopLevelDetails` here
+		if(options.anchorWithoutLinkElement && !hasLink) {
+			titleHtmlStart = `<${options.anchorWithoutLinkElement}>${itemTitle}</${options.anchorWithoutLinkElement}>`;
+		}
+
 		let titleHtmlEnd = "";
 		if(options.useTopLevelDetails && !isChildList && entry.children) {
-			let hasLink = Boolean(aAttrsStr);
 			if(hasLink) {
-				// No other interactive elements in <summary>
-				titleHtmlStart = `${titleHtml}<details><summary>${itemTitle}</summary>`;
+				// `<a>` must be sibling: no other interactive elements in <summary>
+				titleHtmlStart = `${titleHtmlStart}<details><summary>${itemTitle}</summary>`;
 			} else {
 				titleHtmlStart = `<details><summary>${itemTitle}</summary>`;
 			}
 			titleHtmlEnd = "</details>";
 		}
+
 		let childContentStr = entry.children ? navigationToHtml.call(this, entry.children, options) : "";
 
 		return `<${options.listItemElement}${buildHtmlAttr("class", liClass)}>${titleHtmlStart}${options.showExcerpt && entry.excerpt ? `: ${entry.excerpt}` : ""}${childContentStr}${titleHtmlEnd}</${options.listItemElement}>`;

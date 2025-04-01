@@ -354,6 +354,30 @@ let fakeNavigationEntries = [
 	}
 ];
 
+let fakeNavigationEntriesEmptyUrl = [
+	{
+		data: {
+			eleventyNavigation: {
+				key: "root1"
+			},
+			page: {
+				url: "root1.html"
+			}
+		}
+	},
+	{
+		data: {
+			eleventyNavigation: {
+				parent: "root1",
+				key: "child1"
+			},
+			page: {
+				url: false
+			}
+		}
+	}
+];
+
 test("Checking active class on output HTML", t => {
 	let obj = EleventyNavigation.findNavigationEntries(fakeNavigationEntries);
 
@@ -710,4 +734,14 @@ test("Use top level details", t => {
 		useTopLevelDetails: true
 	});
 	t.is(html, `<ul><li><a href="root1.html">root1</a><details><summary>root1</summary><ul><li><a href="child1.html">child1</a></li></ul></details></li></ul>`);
+});
+
+test("Use top level details with empty url", t => {
+	let obj = EleventyNavigation.findNavigationEntries(fakeNavigationEntriesEmptyUrl);
+
+	let html = EleventyNavigation.toHtml.call(fakeConfig, obj, {
+		useTopLevelDetails: true,
+		anchorWithoutLinkElement: "span",
+	});
+	t.is(html, `<ul><li><a href="root1.html">root1</a><details><summary>root1</summary><ul><li><span>child1</span></li></ul></details></li></ul>`);
 });
