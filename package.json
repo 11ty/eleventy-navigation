@@ -36,7 +36,7 @@
     "compatibility": ">=0.7 || >=1.0.0-canary"
   },
   "devDependencies": {
-    "ava": "^6.2.0"
+    "ava": "^6.3.0"
   },
   "dependencies": {
     "dependency-graph": "^1.0.0"
