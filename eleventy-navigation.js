@@ -91,8 +91,13 @@ function isOptionMatch(options, name) {
 	return options[name];
 }
 
+const graphCache = new WeakMap();
+
 function findBreadcrumbEntries(nodes, activeKey, options = {}) {
-	let graph = getDependencyGraph(nodes);
+	if (!graphCache.has(nodes)) {
+		graphCache.set(nodes, getDependencyGraph(nodes));
+	}
+	let graph = graphCache.get(nodes);
 	if (isOptionMatch(options, "allowMissing") && !graph.hasNode(activeKey)) {
 		// Fail gracefully if the key isn't in the graph
 		return [];
