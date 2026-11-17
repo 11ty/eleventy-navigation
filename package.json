@@ -7,7 +7,7 @@
   "description": "A plugin for creating hierarchical navigation in Eleventy projects. Supports breadcrumbs too!",
   "main": ".eleventy.js",
   "scripts": {
-    "test": "npx ava",
+    "test": "node --test",
     "sample": "npx @11ty/eleventy --input=sample --output=sample/_site --config=sample/.eleventy.js"
   },
   "repository": {
@@ -35,15 +35,7 @@
   "11ty": {
     "compatibility": ">=0.7 || >=1.0.0-canary"
   },
-  "devDependencies": {
-    "ava": "^6.4.1"
-  },
   "dependencies": {
     "dependency-graph": "^1.0.0"
-  },
-  "ava": {
-    "files": [
-      "./test/*.js"
-    ]
   }
 }

@@ -1,11 +1,12 @@
-const test = require("ava");
+const test = require("node:test");
+const assert = require("node:assert/strict");
 const EleventyNavigation = require("../eleventy-navigation");
 
-test("Empty navigation", t => {
-	t.deepEqual(EleventyNavigation.findNavigationEntries(), []);
+test("Empty navigation", () => {
+	assert.deepEqual(EleventyNavigation.findNavigationEntries(), []);
 });
 
-test("One root page navigation", t => {
+test("One root page navigation", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -18,18 +19,18 @@ test("One root page navigation", t => {
 			}
 		}
 	]);
-	t.is(obj[0].key, "root1");
-	t.is(obj[0].pluginType, "eleventy-navigation");
+	assert.equal(obj[0].key, "root1");
+	assert.equal(obj[0].pluginType, "eleventy-navigation");
 
 	// Warning, title must be preserved per the public API
-	t.is(obj[0].title, "root1");
+	assert.equal(obj[0].title, "root1");
 	// Warning, url must be preserved per the public API
-	t.is(obj[0].url, "root1.html");
+	assert.equal(obj[0].url, "root1.html");
 
-	t.is(obj[0].children.length, 0);
+	assert.equal(obj[0].children.length, 0);
 });
 
-test("One root page navigation with separate title", t => {
+test("One root page navigation with separate title", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -43,13 +44,13 @@ test("One root page navigation with separate title", t => {
 			}
 		}
 	]);
-	t.is(obj[0].key, "root1");
-	t.is(obj[0].pluginType, "eleventy-navigation");
-	t.is(obj[0].title, "Another title");
-	t.is(obj[0].children.length, 0);
+	assert.equal(obj[0].key, "root1");
+	assert.equal(obj[0].pluginType, "eleventy-navigation");
+	assert.equal(obj[0].title, "Another title");
+	assert.equal(obj[0].children.length, 0);
 });
 
-test("One root, one child page navigation", t => {
+test("One root, one child page navigation", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -73,13 +74,13 @@ test("One root, one child page navigation", t => {
 			}
 		}
 	]);
-	t.is(obj[0].key, "root1");
-	t.is(obj[0].children.length, 1);
-	t.is(obj[0].children[0].parent, "root1");
-	t.is(obj[0].children[0].key, "child1");
+	assert.equal(obj[0].key, "root1");
+	assert.equal(obj[0].children.length, 1);
+	assert.equal(obj[0].children[0].parent, "root1");
+	assert.equal(obj[0].children[0].key, "child1");
 });
 
-test("Three layers deep navigation", t => {
+test("Three layers deep navigation", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -114,15 +115,15 @@ test("Three layers deep navigation", t => {
 			}
 		}
 	]);
-	t.is(obj[0].key, "root1");
-	t.is(obj[0].children.length, 1);
-	t.is(obj[0].children[0].parent, "root1");
-	t.is(obj[0].children[0].key, "child1");
-	t.is(obj[0].children[0].children[0].parent, "child1");
-	t.is(obj[0].children[0].children[0].key, "grandchild1");
+	assert.equal(obj[0].key, "root1");
+	assert.equal(obj[0].children.length, 1);
+	assert.equal(obj[0].children[0].parent, "root1");
+	assert.equal(obj[0].children[0].key, "child1");
+	assert.equal(obj[0].children[0].children[0].parent, "child1");
+	assert.equal(obj[0].children[0].children[0].key, "grandchild1");
 });
 
-test("One root, three child navigation (order)", t => {
+test("One root, three child navigation (order)", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -182,12 +183,12 @@ test("One root, three child navigation (order)", t => {
 			}
 		}
 	]);
-	t.is(obj[0].key, "root1");
-	t.is(obj[0].children.length, 4);
-	t.is(obj[0].children.map(e => e.key).join(","), "child2,child3,child1,child4");
+	assert.equal(obj[0].key, "root1");
+	assert.equal(obj[0].children.length, 4);
+	assert.equal(obj[0].children.map(e => e.key).join(","), "child2,child3,child1,child4");
 });
 
-test("One root, three child navigation, one with 0 (order)", t => {
+test("One root, three child navigation, one with 0 (order)", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -247,12 +248,12 @@ test("One root, three child navigation, one with 0 (order)", t => {
 			}
 		}
 	]);
-	t.is(obj[0].key, "root1");
-	t.is(obj[0].children.length, 4);
-	t.is(obj[0].children.map(e => e.key).join(","), "child2,child3,child1,child4");
+	assert.equal(obj[0].key, "root1");
+	assert.equal(obj[0].children.length, 4);
+	assert.equal(obj[0].children.map(e => e.key).join(","), "child2,child3,child1,child4");
 });
 
-test("One root, three child navigation (implied order)", t => {
+test("One root, three child navigation (implied order)", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -300,12 +301,12 @@ test("One root, three child navigation (implied order)", t => {
 			}
 		}
 	]);
-	t.is(obj[0].key, "root1");
-	t.is(obj[0].children.length, 3);
-	t.is(obj[0].children.map(e => e.key).join(","), "child3,child1,child2");
+	assert.equal(obj[0].key, "root1");
+	assert.equal(obj[0].children.length, 3);
+	assert.equal(obj[0].children.map(e => e.key).join(","), "child3,child1,child2");
 });
 
-test("Show throw an error without a config", t => {
+test("Show throw an error without a config", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -319,7 +320,7 @@ test("Show throw an error without a config", t => {
 		}
 	]);
 
-	t.throws(() => {
+	assert.throws(() => {
 		EleventyNavigation.toHtml(obj);
 	});
 });
@@ -378,56 +379,56 @@ let fakeNavigationEntriesEmptyUrl = [
 	}
 ];
 
-test("Checking active class on output HTML", t => {
+test("Checking active class on output HTML", () => {
 	let obj = EleventyNavigation.findNavigationEntries(fakeNavigationEntries);
 
 	let html = EleventyNavigation.toHtml.call(fakeConfig, obj);
-	t.is(html, `<ul><li><a href="root1.html">root1</a><ul><li><a href="child1.html">child1</a></li></ul></li></ul>`);
+	assert.equal(html, `<ul><li><a href="root1.html">root1</a><ul><li><a href="child1.html">child1</a></li></ul></li></ul>`);
 
 	let activeHtmlItem = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		activeKey: "child1",
 		activeListItemClass: "this-is-the-active-item"
 	});
-	t.is(activeHtmlItem, `<ul><li><a href="root1.html">root1</a><ul><li class="this-is-the-active-item"><a href="child1.html">child1</a></li></ul></li></ul>`);
+	assert.equal(activeHtmlItem, `<ul><li><a href="root1.html">root1</a><ul><li class="this-is-the-active-item"><a href="child1.html">child1</a></li></ul></li></ul>`);
 
 	let activeHtmlAnchor = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		activeKey: "child1",
 		activeAnchorClass: "this-is-the-active-anchor"
 	});
-	t.is(activeHtmlAnchor, `<ul><li><a href="root1.html">root1</a><ul><li><a href="child1.html" class="this-is-the-active-anchor">child1</a></li></ul></li></ul>`);
+	assert.equal(activeHtmlAnchor, `<ul><li><a href="root1.html">root1</a><ul><li><a href="child1.html" class="this-is-the-active-anchor">child1</a></li></ul></li></ul>`);
 
 	let activeHtmlItemAndAnchor = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		activeKey: "child1",
 		activeListItemClass: "this-is-the-active-item",
 		activeAnchorClass: "this-is-the-active-anchor"
 	});
-	t.is(activeHtmlItemAndAnchor, `<ul><li><a href="root1.html">root1</a><ul><li class="this-is-the-active-item"><a href="child1.html" class="this-is-the-active-anchor">child1</a></li></ul></li></ul>`);
+	assert.equal(activeHtmlItemAndAnchor, `<ul><li><a href="root1.html">root1</a><ul><li class="this-is-the-active-item"><a href="child1.html" class="this-is-the-active-anchor">child1</a></li></ul></li></ul>`);
 });
 
-test("Checking aria-current option on output HTML", t => {
+test("Checking aria-current option on output HTML", () => {
 	let obj = EleventyNavigation.findNavigationEntries(fakeNavigationEntries);
 
 	let html = EleventyNavigation.toHtml.call(fakeConfig, obj);
-	t.true(html.indexOf(`<li><a href="child1.html">child1</a></li>`) > -1);
+	assert.ok(html.indexOf(`<li><a href="child1.html">child1</a></li>`) > -1);
 
 	let activeHtmlAnchor = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		activeKey: "child1",
 		useAriaCurrentAttr: true
 	});
-	t.true(activeHtmlAnchor.indexOf(`<li><a href="child1.html" aria-current="page">child1</a></li>`) > -1);
+	assert.ok(activeHtmlAnchor.indexOf(`<li><a href="child1.html" aria-current="page">child1</a></li>`) > -1);
 });
 
-test("Checking has children class on output HTML", t => {
+test("Checking has children class on output HTML", () => {
 	let obj = EleventyNavigation.findNavigationEntries(fakeNavigationEntries);
 
 	let activeHtml = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		listItemHasChildrenClass: "item-has-children"
 	});
-	t.true(activeHtml.indexOf(`<li class="item-has-children"><a href="root1.html">root1</a>`) > -1);
-	t.true(activeHtml.indexOf(`<li><a href="child1.html">child1</a></li>`) > -1);
+	assert.ok(activeHtml.indexOf(`<li class="item-has-children"><a href="root1.html">root1</a>`) > -1);
+	assert.ok(activeHtml.indexOf(`<li><a href="child1.html">child1</a></li>`) > -1);
 });
 
-test("URL override", t => {
+test("URL override", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -442,10 +443,10 @@ test("URL override", t => {
 		}
 	]);
 
-	t.is(obj[0].url, "https://www.zachleat.com/");
+	assert.equal(obj[0].url, "https://www.zachleat.com/");
 });
 
-test("Breadcrumbs", t => {
+test("Breadcrumbs", () => {
 	let obj = EleventyNavigation.findBreadcrumbEntries([
 		{
 			data: {
@@ -481,12 +482,12 @@ test("Breadcrumbs", t => {
 		}
 	], "grandchild1");
 
-	t.is(obj.length, 2);
-	t.is(obj[0].key, "root1");
-	t.is(obj[1].key, "child1");
+	assert.equal(obj.length, 2);
+	assert.equal(obj[0].key, "root1");
+	assert.equal(obj[1].key, "child1");
 });
 
-test("Breadcrumbs (include self)", t => {
+test("Breadcrumbs (include self)", () => {
 	let obj = EleventyNavigation.findBreadcrumbEntries([
 		{
 			data: {
@@ -524,22 +525,22 @@ test("Breadcrumbs (include self)", t => {
 		includeSelf: true
 	});
 
-	t.is(obj.length, 3);
-	t.is(obj[0].key, "root1");
-	t.is(obj[1].key, "child1");
-	t.is(obj[2].key, "grandchild1");
+	assert.equal(obj.length, 3);
+	assert.equal(obj[0].key, "root1");
+	assert.equal(obj[1].key, "child1");
+	assert.equal(obj[2].key, "grandchild1");
 });
 
-test("Breadcrumbs (options.allowMissing)", t => {
+test("Breadcrumbs (options.allowMissing)", () => {
 	const entries = EleventyNavigation.findBreadcrumbEntries(
 		[],
 		"orphan",
 		{allowMissing: true}
 	);
-	t.is(entries.length, 0);
+	assert.equal(entries.length, 0);
 });
 
-test("Output markdown", t => {
+test("Output markdown", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -576,13 +577,13 @@ test("Output markdown", t => {
 	]);
 
 	let html = EleventyNavigation.toMarkdown.call(fakeConfig, obj);
-	t.is(html, `* [root1](root1.html)
+	assert.equal(html, `* [root1](root1.html)
   * [child1](child1.html)
     * [grandchild1](grandchild1.html)
 `);
 });
 
-test("Navigation entry contains page data", t => {
+test("Navigation entry contains page data", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -602,10 +603,10 @@ test("Navigation entry contains page data", t => {
 	]);
 
 	// Page data like tags should be included in the obj
-	t.deepEqual(obj[0].data.tags, ["robot", "lesbian"]);
+	assert.deepEqual(obj[0].data.tags, ["robot", "lesbian"]);
 });
 
-test("Missing url", t => {
+test("Missing url", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -616,10 +617,10 @@ test("Missing url", t => {
 		}
 	]);
 
-	t.is(EleventyNavigation.toHtml.call(fakeConfig, obj), `<ul><li><a>root1</a></li></ul>`);
+	assert.equal(EleventyNavigation.toHtml.call(fakeConfig, obj), `<ul><li><a>root1</a></li></ul>`);
 });
 
-test("Multiple roots", t => {
+test("Multiple roots", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -653,12 +654,12 @@ test("Multiple roots", t => {
 		}
 	]);
 
-	t.deepEqual(obj.map(e => e.key), ["root1", "root2"]);
-	t.deepEqual(obj[0].children.map(e => e.key), ["child1"]);
-	t.deepEqual(obj[1].children.map(e => e.key), ["child3"]);
+	assert.deepEqual(obj.map(e => e.key), ["root1", "root2"]);
+	assert.deepEqual(obj[0].children.map(e => e.key), ["child1"]);
+	assert.deepEqual(obj[1].children.map(e => e.key), ["child3"]);
 });
 
-test("Multiple roots, multiple keys", t => {
+test("Multiple roots, multiple keys", () => {
 	let obj = EleventyNavigation.findNavigationEntries([
 		{
 			data: {
@@ -692,12 +693,12 @@ test("Multiple roots, multiple keys", t => {
 		}
 	], "root1,root2");
 
-	t.deepEqual(obj.map(e => e.key), ["child1", "child3"]);
-	t.deepEqual(obj[0].children.map(e => e.key), []);
-	t.deepEqual(obj[1].children.map(e => e.key), []);
+	assert.deepEqual(obj.map(e => e.key), ["child1", "child3"]);
+	assert.deepEqual(obj[0].children.map(e => e.key), []);
+	assert.deepEqual(obj[1].children.map(e => e.key), []);
 });
 
-test("Breadcrumb include self", t => {
+test("Breadcrumb include self", () => {
 	let nodes = [
 		{
 			data: {
@@ -709,10 +710,10 @@ test("Breadcrumb include self", t => {
 	];
 	let obj = EleventyNavigation.findBreadcrumbEntries(nodes, "root1", { includeSelf: true });
 
-	t.is(EleventyNavigation.toHtml(obj), `<ul><li><a>root1</a></li></ul>`);
+	assert.equal(EleventyNavigation.toHtml(obj), `<ul><li><a>root1</a></li></ul>`);
 });
 
-test("Breadcrumb include self (Liquid.js #35)", t => {
+test("Breadcrumb include self (Liquid.js #35)", () => {
 	let nodes = [
 		{
 			data: {
@@ -724,24 +725,24 @@ test("Breadcrumb include self (Liquid.js #35)", t => {
 	];
 	let obj = EleventyNavigation.findBreadcrumbEntries(nodes, "root1", [ "includeSelf", true ]);
 
-	t.is(EleventyNavigation.toHtml(obj), `<ul><li><a>root1</a></li></ul>`);
+	assert.equal(EleventyNavigation.toHtml(obj), `<ul><li><a>root1</a></li></ul>`);
 });
 
-test("Use top level details", t => {
+test("Use top level details", () => {
 	let obj = EleventyNavigation.findNavigationEntries(fakeNavigationEntries);
 
 	let html = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		useTopLevelDetails: true
 	});
-	t.is(html, `<ul><li><a href="root1.html">root1</a><details><summary>root1</summary><ul><li><a href="child1.html">child1</a></li></ul></details></li></ul>`);
+	assert.equal(html, `<ul><li><a href="root1.html">root1</a><details><summary>root1</summary><ul><li><a href="child1.html">child1</a></li></ul></details></li></ul>`);
 });
 
-test("Use top level details with empty url", t => {
+test("Use top level details with empty url", () => {
 	let obj = EleventyNavigation.findNavigationEntries(fakeNavigationEntriesEmptyUrl);
 
 	let html = EleventyNavigation.toHtml.call(fakeConfig, obj, {
 		useTopLevelDetails: true,
 		anchorElementWithoutHref: "span",
 	});
-	t.is(html, `<ul><li><a href="root1.html">root1</a><details><summary>root1</summary><ul><li><span>child1</span></li></ul></details></li></ul>`);
+	assert.equal(html, `<ul><li><a href="root1.html">root1</a><details><summary>root1</summary><ul><li><span>child1</span></li></ul></details></li></ul>`);
 });
